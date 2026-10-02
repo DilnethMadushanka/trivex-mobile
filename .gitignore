@@ -1,0 +1,10 @@
+# local database (admin password hash + sales) – never commit
+data/
+*.db
+*.db-wal
+*.db-shm
+node_modules/
+*.log
+.env
+_t*.html
+_i*.html

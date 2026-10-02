@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script src="transition.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>xMobile Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/duotone/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
+<link rel="stylesheet" href="base.css">
+<style>
+header{display:flex;align-items:center;gap:1rem;padding:0 1.4rem;height:60px;border-bottom:1px solid var(--line);background:var(--bg2);position:sticky;top:0;z-index:20}
+.logo{font-weight:800;font-size:1.3rem;letter-spacing:-.04em}.logo b{color:var(--acc)}
+.tag{font:600 .7rem var(--mono);letter-spacing:.14em;padding:.25rem .6rem;border:1px solid var(--acc);color:var(--acc);border-radius:var(--r-btn)}
+.hr{margin-left:auto;display:flex;gap:.6rem}
+.ib{height:38px;padding:0 .9rem;border-radius:var(--r-btn);border:1px solid var(--line2);display:inline-flex;align-items:center;gap:.4rem;font-size:.85rem}.ib:hover{border-color:var(--acc);color:var(--acc)}
+.wrap{max-width:1200px;margin:0 auto;padding:1.4rem}
+.tabs{display:flex;gap:.4rem;margin-bottom:1.4rem;overflow-x:auto}
+.tab{padding:.6rem 1.2rem;border-radius:var(--r-btn);border:1px solid var(--line2);color:var(--mut);white-space:nowrap}.tab.on{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+.panel{display:none}.panel.on{display:block}
+.kp{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.4rem}
+.k{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:1.2rem}.k small{color:var(--mut)}.k b{display:block;font:800 1.8rem var(--mono);color:var(--acc);letter-spacing:-.05em}.k span{font-size:.8rem;color:var(--mut)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.bx{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:1.2rem}.bx h3{margin-bottom:.8rem;font-size:1.05rem}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{color:var(--mut);font-weight:500;text-align:left;padding:.5rem .4rem;border-bottom:1px solid var(--line2);white-space:nowrap}
+td{padding:.6rem .4rem;border-bottom:1px solid var(--line);vertical-align:middle}
+td.m{font-family:var(--mono)}
+.tw{overflow-x:auto}
+.bar{display:flex;gap:.8rem;margin-bottom:1rem;flex-wrap:wrap}.bar input{max-width:320px}
+.sm{padding:.35rem .8rem;font-size:.8rem}
+.low{color:var(--acc)}.out{color:var(--bad)}.off{opacity:.45}
+.modal{position:fixed;inset:0;background:rgba(11,18,32,.45);backdrop-filter:blur(5px);display:none;place-items:center;z-index:100;padding:1rem}.modal.on{display:grid}
+.box{background:var(--bg2);border:1px solid var(--line2);border-radius:var(--r-card);width:min(560px,100%);max-height:92dvh;overflow:auto;padding:1.4rem}
+.box h3{font-size:1.3rem;margin-bottom:1rem}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}.fg .f{grid-column:1/-1}
+.actions{display:flex;gap:.6rem;margin-top:1.2rem;justify-content:flex-end}
+.err{color:var(--bad);font-size:.85rem;min-height:1.2em;margin-top:.6rem}
+.toast{position:fixed;left:50%;bottom:1.5rem;transform:translate(-50%,150%);background:var(--card);border:1px solid var(--acc);padding:.7rem 1.2rem;border-radius:var(--r-btn);z-index:200;transition:.3s}.toast.on{transform:translate(-50%,0)}
+.empty{text-align:center;color:var(--mut);padding:2rem}
+@media(max-width:800px){.kp,.two{grid-template-columns:1fr}.fg{grid-template-columns:1fr}
+ header{padding:0 .8rem}.tag,.lb{display:none}.ib{width:40px;padding:0;justify-content:center}.wrap{padding:1rem .8rem}
+ .bar input{max-width:none;flex:1}.bar .btn{flex:1}.k b{font-size:1.5rem}
+ .modal{padding:0;align-items:end}.box{border-radius:24px 24px 0 0;width:100%}
+ th,td{padding:.55rem .5rem}.sm{padding:.55rem .8rem}
+}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="logo">x<b>Mobile</b></a><span class="tag">ADMIN</span>
+  <div class="hr"><a class="ib" href="pos.html" aria-label="POS"><i class="ph-bold ph-cash-register"></i><span class="lb"> POS</span></a><button class="ib" id="pw" aria-label="Change password"><i class="ph-bold ph-key"></i><span class="lb"> Password</span></button><button class="ib" id="lo" aria-label="Sign out"><i class="ph-bold ph-sign-out"></i><span class="lb"> <span id="who"></span></span></button></div>
+</header>
+<div class="wrap">
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-t="ov">Overview</button><button class="tab" data-t="pr">Products & stock</button><button class="tab" data-t="sa">Sales</button><button class="tab" data-t="st">Staff</button>
+  </div>
+
+  <div class="panel on" id="ov">
+    <div class="kp" id="kp"></div>
+    <div class="two"><div class="bx"><h3>Best sellers (30 days)</h3><div id="top"></div></div><div class="bx"><h3>Low stock</h3><div id="lowl"></div></div></div>
+  </div>
+
+  <div class="panel" id="pr">
+    <div class="bar"><input id="pq" placeholder="Search name, brand or SKU" aria-label="Search products"><button class="btn btn-p" id="addP"><i class="ph-bold ph-plus"></i> Add product</button></div>
+    <div class="bx tw"><table><thead><tr><th>SKU</th><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th></th></tr></thead><tbody id="pb"></tbody></table></div>
+  </div>
+
+  <div class="panel" id="sa">
+    <div class="bar"><select id="days" style="max-width:200px" aria-label="Period"><option value="1">Today</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select></div>
+    <div class="bx tw"><table><thead><tr><th>Invoice</th><th>Date</th><th>Cashier</th><th>Items</th><th>Pay</th><th>Total</th><th></th></tr></thead><tbody id="sb"></tbody></table></div>
+  </div>
+
+  <div class="panel" id="st">
+    <div class="bar"><button class="btn btn-p" id="addU"><i class="ph-bold ph-user-plus"></i> Add staff</button></div>
+    <div class="bx tw"><table><thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Status</th><th></th></tr></thead><tbody id="ub"></tbody></table></div>
+  </div>
+</div>
+
+<div class="modal" id="mP"><form class="box" id="fP"><h3 id="pt">Product</h3>
+  <div class="fg">
+    <div class="f"><label for="n">Name</label><input id="n" required></div>
+    <div><label for="s">SKU</label><input id="s" required></div>
+    <div><label for="b">Brand</label><input id="b"></div>
+    <div><label for="c">Category</label><select id="c"></select></div>
+    <div><label for="bd">Badge (Hot / Deal / New)</label><input id="bd" maxlength="12"></div>
+    <div><label for="p">Price (Rs.)</label><input id="p" type="number" min="0" required></div>
+    <div><label for="o">Old price (optional)</label><input id="o" type="number" min="0"></div>
+    <div><label for="k">Stock</label><input id="k" type="number" min="0" required></div>
+    <div><label for="ac">Visible</label><select id="ac"><option value="1">Yes</option><option value="0">Hidden</option></select></div>
+    <div class="f"><label for="sp">Short spec</label><input id="sp" maxlength="120"></div>
+    <div class="f"><label for="im">Photo URL or file (e.g. img/s24.jpg)</label><input id="im"></div>
+  </div><div class="err" id="pe"></div>
+  <div class="actions"><button type="button" class="btn btn-g" data-close>Cancel</button><button class="btn btn-p">Save</button></div></form></div>
+
+<div class="modal" id="mU"><form class="box" id="fU"><h3>Add staff</h3>
+  <div class="fg"><div><label for="un">Name</label><input id="un" required></div><div><label for="uu">Username</label><input id="uu" required autocomplete="off"></div>
+  <div><label for="up">Password (6+ chars)</label><input id="up" type="password" required autocomplete="new-password"></div><div><label for="ur">Role</label><select id="ur"><option value="cashier">Cashier</option><option value="admin">Admin</option></select></div></div>
+  <div class="err" id="ue"></div><div class="actions"><button type="button" class="btn btn-g" data-close>Cancel</button><button class="btn btn-p">Create</button></div></form></div>
+
+<div class="modal" id="mW"><form class="box" id="fW"><h3>Change my password</h3>
+  <div class="fg"><div class="f"><label for="wc">Current password</label><input id="wc" type="password" required autocomplete="current-password"></div><div class="f"><label for="wn">New password (6+ chars)</label><input id="wn" type="password" required autocomplete="new-password"></div></div>
+  <div class="err" id="we"></div><div class="actions"><button type="button" class="btn btn-g" data-close>Cancel</button><button class="btn btn-p">Update</button></div></form></div>
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script src="api.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const esc=t=>String(t??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let tt;const toast=m=>{const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),1800)};
+let me,editId=null,cur="ov";
+$("#c").innerHTML=CATS.map(c=>`<option value="${c.id}">${c.label}</option>`).join("");
+$("#tabs").onclick=e=>{const b=e.target.closest(".tab");if(!b)return;cur=b.dataset.t;document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("on",p.id===cur));load()};
+document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>b.closest(".modal").classList.remove("on"));
+document.addEventListener("keydown",e=>e.key==="Escape"&&document.querySelectorAll(".modal.on").forEach(m=>m.classList.remove("on")));
+const act=async(fn)=>{try{await fn()}catch(e){toast(e.message);if(e.status===401)location.reload()}};
+async function load(){await act(async()=>({ov:overview,pr:products,sa:sales,st:staff})[cur]())}
+
+async function overview(){
+  const r=await api("/report");
+  $("#kp").innerHTML=[["Today",r.today],["Last 7 days",r.week],["Last 30 days",r.month]].map(([l,x])=>`<div class="k"><small>${l}</small><b>${fmt(x.t)}</b><span>${x.n} sales</span></div>`).join("");
+  $("#top").innerHTML=r.top.length?`<table>${r.top.map(t=>`<tr><td>${esc(t.name)}</td><td class="m">${t.qty} sold</td><td class="m">${fmt(t.rev)}</td></tr>`).join("")}</table>`:`<div class="empty">No sales yet.</div>`;
+  $("#lowl").innerHTML=r.low.length?`<table>${r.low.map(t=>`<tr><td>${esc(t.name)}</td><td class="m ${t.stock?"low":"out"}">${t.stock} left</td></tr>`).join("")}</table>`:`<div class="empty">Everything is well stocked.</div>`;
+}
+let plist=[];
+async function products(){plist=await api("/products?all=1");drawP()}
+function drawP(){
+  const q=$("#pq").value.toLowerCase();
+  const l=plist.filter(p=>`${p.name} ${p.brand} ${p.sku}`.toLowerCase().includes(q));
+  $("#pb").innerHTML=l.length?l.map(p=>`<tr class="${p.active?"":"off"}"><td class="m">${esc(p.sku)}</td><td>${esc(p.name)}<br><small style="color:var(--mut)">${esc(p.brand)}${p.active?"":" · hidden"}</small></td><td>${esc(p.cat)}</td><td class="m">${fmt(p.price)}</td><td class="m ${p.stock<=0?"out":p.stock<=5?"low":""}">${p.stock}</td>
+    <td style="white-space:nowrap"><button class="btn btn-g sm" data-e="${p.id}">Edit</button> <button class="btn btn-g sm" data-d="${p.id}" aria-label="Hide product"><i class="ph-bold ph-eye-slash"></i></button></td></tr>`).join(""):`<tr><td colspan="6" class="empty">No products</td></tr>`;
+}
+$("#pq").oninput=drawP;
+$("#pb").onclick=e=>{const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.e)openP(plist.find(p=>p.id==b.dataset.e));
+  if(b.dataset.d&&confirm("Hide this product from the store and POS? Sales history is kept."))act(async()=>{await api("/products?id="+b.dataset.d,{method:"DELETE"});toast("Hidden");products()})};
+function openP(p){editId=p?.id||null;$("#pt").textContent=p?"Edit product":"Add product";
+  $("#n").value=p?.name||"";$("#s").value=p?.sku||"";$("#b").value=p?.brand||"";$("#c").value=p?.cat||"phones";$("#bd").value=p?.badge||"";$("#p").value=p?.price??"";$("#o").value=p?.old||"";$("#k").value=p?.stock??"";$("#ac").value=p&&!p.active?"0":"1";$("#sp").value=p?.spec||"";$("#im").value=p?.img||"";$("#pe").textContent="";$("#mP").classList.add("on");$("#n").focus()}
+$("#addP").onclick=()=>openP();
+$("#fP").onsubmit=async e=>{e.preventDefault();
+  const body={id:editId,name:$("#n").value,sku:$("#s").value,brand:$("#b").value,cat:$("#c").value,badge:$("#bd").value,price:+$("#p").value,old:+$("#o").value||0,stock:+$("#k").value,active:+$("#ac").value,spec:$("#sp").value,img:$("#im").value.trim()};
+  try{await api("/products",{method:editId?"PUT":"POST",body});$("#mP").classList.remove("on");toast("Saved");products()}catch(err){$("#pe").textContent=err.message}};
+
+async function sales(){
+  const l=await api("/sales?days="+$("#days").value);
+  $("#sb").innerHTML=l.length?l.map(s=>`<tr class="${s.voided?"off":""}"><td class="m">${s.inv}${s.voided?" (void)":""}</td><td>${new Date(s.time).toLocaleString("en-GB",{dateStyle:"short",timeStyle:"short"})}</td><td>${esc(s.cashier)}</td><td title="${esc(s.items.map(i=>i.qty+"x "+i.name).join(", "))}">${s.items.reduce((a,i)=>a+i.qty,0)}</td><td>${s.method}</td><td class="m">${fmt(s.total)}</td>
+   <td>${s.voided?"":`<button class="btn btn-g sm" data-v="${s.id}">Void</button>`}</td></tr>`).join(""):`<tr><td colspan="7" class="empty">No sales in this period</td></tr>`;
+}
+$("#days").onchange=()=>act(sales);
+$("#sb").onclick=e=>{const b=e.target.closest("[data-v]");if(b&&confirm("Void this sale and return the items to stock?"))act(async()=>{await api("/sales/void",{method:"POST",body:{id:+b.dataset.v}});toast("Sale voided");sales()})};
+
+async function staff(){
+  const l=await api("/users");
+  $("#ub").innerHTML=l.map(u=>`<tr class="${u.active?"":"off"}"><td>${esc(u.name)}</td><td class="m">${esc(u.username)}</td><td>${u.role}</td><td>${u.active?"Active":"Disabled"}</td>
+   <td style="white-space:nowrap"><button class="btn btn-g sm" data-r="${u.id}">Reset password</button> ${u.username===me.username?"":`<button class="btn btn-g sm" data-t="${u.id}" data-a="${u.active?0:1}">${u.active?"Disable":"Enable"}</button>`}</td></tr>`).join("");
+}
+$("#ub").onclick=e=>{const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.r){const pw=prompt("New password for this user (6+ characters):");if(pw)act(async()=>{await api("/users",{method:"PUT",body:{id:+b.dataset.r,password:pw}});toast("Password reset")})}
+  if(b.dataset.t)act(async()=>{await api("/users",{method:"PUT",body:{id:+b.dataset.t,active:+b.dataset.a}});staff()})};
+$("#addU").onclick=()=>{$("#fU").reset();$("#ue").textContent="";$("#mU").classList.add("on")};
+$("#fU").onsubmit=async e=>{e.preventDefault();try{await api("/users",{method:"POST",body:{name:$("#un").value,username:$("#uu").value,password:$("#up").value,role:$("#ur").value}});$("#mU").classList.remove("on");toast("Staff added");staff()}catch(err){$("#ue").textContent=err.message}};
+$("#pw").onclick=()=>{$("#fW").reset();$("#we").textContent="";$("#mW").classList.add("on")};
+$("#fW").onsubmit=async e=>{e.preventDefault();try{await api("/password",{method:"POST",body:{current:$("#wc").value,password:$("#wn").value}});$("#mW").classList.remove("on");toast("Password updated")}catch(err){$("#we").textContent=err.message}};
+$("#lo").onclick=logout;
+requireLogin(["admin"],u=>{me=u;$("#who").textContent=u.name;load()});
+</script>
+</body></html>
