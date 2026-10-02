@@ -28,11 +28,14 @@ nav .wrap{display:flex;align-items:center;gap:1.5rem;height:68px}
 /* ---------- video hero ---------- */
 .vhero{position:relative;isolation:isolate;overflow:hidden;background:#04060d;color:#fff;min-height:calc(100dvh - 68px);display:grid;align-items:end}
 .vhero video,.vhero .vposter{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-3;background:#04060d}
+.vhero video{transform:translateZ(0);backface-visibility:hidden}
+.vhero{contain:paint}
+.vghost{will-change:transform;transition:opacity .7s,transform .3s linear}
 .vhero .vposter{background:#04060d center/cover no-repeat url(img/hero-poster.jpg)}
 .vhero::before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(0deg,rgba(4,6,13,.94) 0,rgba(4,6,13,.55) 32%,rgba(4,6,13,.1) 62%,rgba(4,6,13,.55) 100%),radial-gradient(70% 60% at 0 100%,rgba(20,86,255,.45),transparent 70%)}
-.vhero::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.07;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
 .vcopy{padding-top:6rem;padding-bottom:clamp(3.5rem,8vh,5.5rem);width:100%}
-.vchip{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem .9rem;border-radius:var(--r-btn);background:rgba(255,255,255,.12);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.25);font-size:.8rem;font-weight:500;opacity:0}
+.vchip{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem .9rem;border-radius:var(--r-btn);background:rgba(10,16,34,.6);border:1px solid rgba(255,255,255,.25);font-size:.8rem;font-weight:500;opacity:0}
 .vhead.go .vchip{animation:fade .8s .1s forwards}
 .vchip::before{content:"";width:8px;height:8px;border-radius:50%;background:#5b8cff;box-shadow:0 0 0 0 rgba(91,140,255,.8);animation:dot 2s infinite}
 @keyframes dot{70%{box-shadow:0 0 0 9px rgba(91,140,255,0)}100%{box-shadow:0 0 0 0 rgba(91,140,255,0)}}
@@ -41,14 +44,14 @@ nav .wrap{display:flex;align-items:center;gap:1.5rem;height:68px}
 .vhero h1 .w>span{display:block;transform:translateY(115%)}
 .vhead.go h1 .w>span{animation:up 1s cubic-bezier(.2,.8,.2,1) forwards}
 .vhead.go h1 .w:nth-child(1)>span{animation-delay:.25s}.vhead.go h1 .w:nth-child(2)>span{animation-delay:.38s}
-.vhero h1 em{font-style:normal;background:linear-gradient(90deg,#6ea0ff,#fff,#6ea0ff);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 5s linear infinite}
+.vhero h1 em{font-style:normal;background:linear-gradient(90deg,#6ea0ff,#fff,#6ea0ff);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent}
 .vrow{display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;flex-wrap:wrap}
 .vrow p{color:rgba(255,255,255,.78);font-size:1.1rem;max-width:36ch;margin-bottom:1.4rem;opacity:0;animation:fade .9s .75s forwards}
 .vrow .cta{opacity:0;animation:fade .9s .9s forwards}
 .btn-w{background:#fff;color:var(--acc)}.btn-w:hover{background:#e8efff}
 .btn-o{border:1px solid rgba(255,255,255,.4);color:#fff}.btn-o:hover{border-color:#fff;background:rgba(255,255,255,.1)}
 .vctl{position:absolute;top:1.4rem;right:clamp(1rem,4vw,2.5rem);display:flex;gap:.5rem;z-index:3}
-.vctl button{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.28);color:#fff;display:grid;place-items:center;font-size:1.15rem;transition:.2s}
+.vctl button{width:44px;height:44px;border-radius:50%;background:rgba(10,16,34,.6);border:1px solid rgba(255,255,255,.28);color:#fff;display:grid;place-items:center;font-size:1.15rem;transition:.2s}
 .vctl button:hover{background:rgba(255,255,255,.25)}
 .vcue{position:absolute;right:clamp(1rem,4vw,2.5rem);bottom:1.6rem;z-index:3;display:flex;align-items:center;gap:.6rem;font:600 .7rem var(--mono);letter-spacing:.14em;color:rgba(255,255,255,.7);text-transform:uppercase}
 .vcue::after{content:"";width:1px;height:34px;background:linear-gradient(#fff,transparent);animation:drip 2s infinite}
@@ -99,7 +102,7 @@ nav .wrap{display:flex;align-items:center;gap:1.5rem;height:68px}
 @keyframes gIn{from{opacity:0;transform:translateY(8%) scale(.96)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.vhero h1 .w>span{transform:none!important}.vchip,.vp,.vrow .cta{opacity:1!important}.vfl .cw{opacity:1}}
 /* chapter timeline: a dark glass dock so it reads on any frame of the video */
-.vrail{display:flex;align-items:center;gap:1rem;margin-top:1.6rem;padding:.6rem 1.1rem .7rem;background:rgba(6,10,22,.66);-webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);border:1px solid rgba(255,255,255,.16);border-radius:18px;box-shadow:0 14px 40px -14px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.08)}
+.vrail{display:flex;align-items:center;gap:1rem;margin-top:1.6rem;padding:.6rem 1.1rem .7rem;background:rgba(6,10,22,.84);border:1px solid rgba(255,255,255,.16);border-radius:18px;box-shadow:0 14px 40px -14px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.08)}
 .vsegs{display:flex;gap:6px;flex:1;min-width:0}
 .vseg{flex:var(--d) 1 0;min-width:0;text-align:left;padding:.35rem 0 .15rem;cursor:pointer;color:rgba(255,255,255,.62);transition:color .3s}
 .vseg:hover,.vseg.on{color:#fff}
@@ -520,15 +523,16 @@ addEventListener("scroll",()=>{if(!tick2){tick2=true;requestAnimationFrame(onScr
   const v=$("#hv"),box=$("#top"),pl=$("#vplay"),mu=$("#vmute"),rail=$("#vrail"),feat=$("#vfeat");
   let dur=0,ci=-1,visible=true,userPaused=reduce,raf=0,segs=[];
   const small=matchMedia("(max-width:900px)").matches||(navigator.connection&&navigator.connection.saveData);
-  v.src=small?"video/hero-sm.mp4":"video/hero.mp4";v.preload="auto";
+  v.src=small?"video/hero-sm.mp4":"video/hero.mp4";v.preload="auto";v.disablePictureInPicture=true;v.setAttribute("disableremoteplayback","");
   const setPlay=p=>{pl.innerHTML='<i class="ph-bold ph-'+(p?"pause":"play")+'"></i>';pl.setAttribute("aria-label",p?"Pause video":"Play video")};
   const setMute=m=>{mu.innerHTML='<i class="ph-bold ph-speaker-'+(m?"slash":"high")+'"></i>';mu.setAttribute("aria-pressed",!m);mu.setAttribute("aria-label",m?"Turn sound on":"Turn sound off")};
   function build(){
     dur=v.duration||48.9;
     rail.innerHTML='<div class="vsegs">'+CH.map((c,i)=>'<button class="vseg" data-i="'+i+'" style="--d:'+((CH[i+1]?CH[i+1][0]:dur)-c[0]).toFixed(2)+'" aria-label="'+c[1]+'"><span>'+c[1]+'</span><i></i></button>').join("")+'</div><span class="vtime" id="vtime" aria-hidden="true"></span>';
-    segs=[...rail.querySelectorAll(".vseg")];
+    segs=[...rail.querySelectorAll(".vseg")];segP.length=0;lastSec=-1;
   }
-  const head=$("#vhead"),ghost=$("#vghostn");
+  const head=$("#vhead"),ghost=$("#vghostn"),ftEl=$("#vft"),gtEl=$("#vghost");
+  let lastCp=-1,lastSec=-1;const segP=[];
   const retrigger=()=>{head.classList.remove("go");void head.offsetWidth;head.classList.add("go")};
   const esc2=t=>t.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
   let tok=0,cws=[],lit=-1,ci2=-1;
@@ -554,9 +558,9 @@ addEventListener("scroll",()=>{if(!tick2){tick2=true;requestAnimationFrame(onScr
     const t=v.currentTime;let i=0;for(let k=0;k<CH.length;k++)if(t>=CH[k][0])i=k;
     chapter(i);
     const a=CH[i][0],b=CH[i+1]?CH[i+1][0]:dur,cp=Math.min(Math.max((t-a)/(b-a),0),1);
-    box.style.setProperty("--cp",cp.toFixed(3));
-    const mm=x=>Math.floor(x/60)+":"+String(Math.floor(x%60)).padStart(2,"0"),tm=$("#vtime");if(tm)tm.textContent=mm(t)+" / "+mm(dur);
-    segs.forEach((g,k)=>{const x=CH[k][0],y=CH[k+1]?CH[k+1][0]:dur;g.style.setProperty("--p",Math.min(Math.max((t-x)/(y-x),0),1))});
+    const cq=Math.round(cp*100);if(cq!==lastCp){lastCp=cq;const v2=(cq/100).toFixed(2);ftEl.style.setProperty("--cp",v2);gtEl.style.setProperty("--cp",v2)}
+    const sec=Math.floor(t);if(sec!==lastSec){lastSec=sec;const mm=x=>Math.floor(x/60)+":"+String(Math.floor(x%60)).padStart(2,"0"),tm=$("#vtime");if(tm)tm.textContent=mm(t)+" / "+mm(dur)}
+    segs.forEach((g,k)=>{const x=CH[k][0],y=CH[k+1]?CH[k+1][0]:dur,p=Math.round(Math.min(Math.max((t-x)/(y-x),0),1)*200)/200;if(segP[k]!==p){segP[k]=p;g.style.setProperty("--p",p)}});
     // karaoke: caption words brighten in time with the chapter (all lit by 75% of the chapter)
     const n=cws.length,L=Math.min(n,Math.ceil(Math.min(cp/.75,1)*n));
     if(L!==lit){lit=L;cws.forEach((w,k)=>w.classList.toggle("lit",k<L))}
@@ -564,8 +568,8 @@ addEventListener("scroll",()=>{if(!tick2){tick2=true;requestAnimationFrame(onScr
     if(box.dataset.ph!==ph){box.dataset.ph=ph;if(ph!=="feature")retrigger()}
     feat.setAttribute("aria-hidden",ph==="feature"?"false":"true");
   }
-  const loop=()=>{sync();raf=v.paused?0:requestAnimationFrame(loop)};
-  const start=()=>{if(!raf)raf=requestAnimationFrame(loop)};
+  let iv=0;
+  const start=()=>{if(iv)return;iv=setInterval(()=>{if(v.paused){clearInterval(iv);iv=0}sync()},100)};
   v.addEventListener("loadedmetadata",()=>{build();sync()});
   if(v.readyState>=1){build();sync()}
   v.addEventListener("play",()=>{setPlay(true);start()});
