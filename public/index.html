@@ -127,7 +127,7 @@ nav .wrap{display:flex;align-items:center;gap:1.5rem;height:68px}
 .btn-p.pulse{position:relative}.btn-p.pulse::after{content:"";position:absolute;inset:0;border-radius:inherit;border:2px solid var(--acc);animation:ping 2.4s ease-out infinite}
 @keyframes ping{to{transform:scale(1.25,1.6);opacity:0}}
 .stage{position:relative;z-index:2;align-self:end;display:grid;justify-items:center}
-.shot{position:relative;width:min(1180px,100%,calc(62dvh*1.778));transform:translateY(calc(var(--sy,0)*-.06px));opacity:0;animation:shotin 1.4s .25s cubic-bezier(.2,.8,.2,1) forwards}
+.shot{position:relative;width:min(1180px,100%,calc(62dvh*1.778));transform:translateY(calc(var(--sy,0)*.04px));opacity:0;animation:shotin 1.4s .25s cubic-bezier(.2,.8,.2,1) forwards}
 @keyframes shotin{from{opacity:0;translate:0 90px;filter:blur(14px)}to{opacity:1;translate:0 0;filter:none}}
 .shot .tilt{transform:rotateY(var(--ry,0deg)) rotateX(var(--rx,0deg));transition:transform .2s ease-out;transform-style:preserve-3d}
 .shot img{display:block;width:100%;height:auto;mix-blend-mode:multiply;animation:floaty 7s ease-in-out infinite}
@@ -170,15 +170,15 @@ h2 em{font-style:normal;color:var(--acc)}
 .sp p{color:var(--mut);margin-top:.6rem;max-width:34ch}
 .sp .tg{position:absolute;top:1.4rem;left:1.4rem;font:600 .7rem var(--mono);letter-spacing:.14em;text-transform:uppercase;background:var(--acc);color:#fff;padding:.3rem .7rem;border-radius:var(--r-btn)}
 /* ---------- bento ---------- */
-.bento{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:170px;gap:1rem;margin-top:2.5rem}
+.bento{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:170px;grid-auto-flow:dense;gap:1rem;margin-top:2.5rem}
 .tile{position:relative;overflow:hidden;border-radius:var(--r-card);border:1px solid var(--line);background:#fff;padding:1.4rem;display:flex;flex-direction:column;justify-content:flex-end;transition:border-color .25s,transform .25s;text-align:left}
 .tile:hover{border-color:var(--acc);transform:translateY(-3px)}
 .tile i{position:absolute;top:1.2rem;right:1.2rem;font-size:2.4rem;color:var(--acc)}
 .tile h3{font-size:1.4rem;letter-spacing:-.03em}.tile span{color:var(--mut);font-size:.85rem}
 .t1{grid-column:span 3;grid-row:span 2;background:linear-gradient(160deg,#e3ecff,#fff 70%)}
 .t1 i{font-size:5rem}.t1 h3{font-size:2.4rem}
-.t2{grid-column:span 3}.t3{grid-column:span 2}.t4{grid-column:span 1}
-.t5{grid-column:span 2;background:var(--acc);color:#fff;border-color:var(--acc)}.t5 i{color:#fff}.t5 span{color:#cfdcff}
+.t2{grid-column:span 3}.t3{grid-column:span 2}.t4{grid-column:span 3}
+.t5{grid-column:span 3;background:var(--acc);color:#fff;border-color:var(--acc)}.t5 i{color:#fff}.t5 span{color:#cfdcff}
 .t6{grid-column:span 1}
 /* ---------- shop ---------- */
 .tools{display:grid;grid-template-columns:1fr auto;gap:1rem;margin:2rem 0 1rem}
@@ -263,16 +263,41 @@ footer{background:var(--bg2);border-top:1px solid var(--line);padding:4rem 0 0;o
 .qvx{position:absolute;top:1rem;right:1rem;width:38px;height:38px;border-radius:50%;background:#fff;border:1px solid var(--line2);display:grid;place-items:center}
 .toast{position:fixed;left:50%;bottom:1.5rem;transform:translate(-50%,150%);background:var(--tx);color:#fff;padding:.8rem 1.3rem;border-radius:var(--r-btn);z-index:120;transition:.35s}
 .toast.on{transform:translate(-50%,0)}
-.rv{opacity:0;transform:translateY(28px);transition:.8s cubic-bezier(.2,.8,.2,1)}.rv.in{opacity:1;transform:none}
+/* ---------- scroll reveals: data-r = up | left | right | zoom | blur | clip ; --i = stagger index ---------- */
+.rv,[data-r]{--e:cubic-bezier(.2,.8,.2,1);opacity:0;transition:opacity .9s var(--e),transform .9s var(--e),filter .9s var(--e),clip-path 1.2s var(--e);transition-delay:calc(var(--i,0)*80ms)}
+.rv,[data-r=up]{transform:translateY(38px)}
+[data-r=left]{transform:translateX(-52px)}[data-r=right]{transform:translateX(52px)}
+[data-r=zoom]{transform:scale(.86)}
+[data-r=blur]{filter:blur(14px);transform:translateY(20px)}
+[data-r=clip]{opacity:1;clip-path:inset(0 0 100% 0 round 28px);transform:translateY(30px)}
+.rv.in,[data-r].in{opacity:1;transform:none;filter:none}
+[data-r=clip].in{clip-path:inset(0 0 0 0 round 28px)}
+html:not(.js) .rv,html:not(.js) [data-r]{opacity:1;transform:none;filter:none;clip-path:none}
+@media(prefers-reduced-motion:reduce){.rv,[data-r]{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important;transition:none!important}}
+/* spotlight cards: image drifts with scroll */
+.sp::before{inset:-48px 0;transform:translateY(calc(var(--py,0)*1px)) scale(var(--hs,1.02))}
+.sp:hover{--hs:1.08}
+/* nav hides while reading down, returns on scroll up */
+nav{transition:transform .4s var(--e,cubic-bezier(.2,.8,.2,1))}nav.hide{transform:translateY(-101%)}
+/* back to top with progress ring */
+#totop{position:fixed;right:1rem;bottom:1rem;z-index:55;width:48px;height:48px;border-radius:50%;background:#fff;border:1px solid var(--line2);box-shadow:var(--sh);display:grid;place-items:center;color:var(--acc);font-size:1.1rem;opacity:0;transform:translateY(16px) scale(.9);pointer-events:none;transition:.35s}
+#totop.on{opacity:1;transform:none;pointer-events:auto}
+#totop svg{position:absolute;inset:-1px;width:calc(100% + 2px);height:calc(100% + 2px);transform:rotate(-90deg)}
+#totop circle{fill:none;stroke:var(--acc);stroke-width:2.5;stroke-dasharray:151;stroke-dashoffset:calc(151 - var(--tp,0)*151);stroke-linecap:round}
+h2.under{position:relative;display:inline-block}
+h2.under::after{content:"";position:absolute;left:0;bottom:-.25em;height:4px;width:100%;border-radius:4px;background:linear-gradient(90deg,var(--acc),transparent);transform:scaleX(0);transform-origin:0 50%;transition:transform 1.1s .3s var(--e,cubic-bezier(.2,.8,.2,1))}
+h2.under.in::after{transform:scaleX(1)}
+.deal h2.under{display:block;width:fit-content}.deal h2.under::after{background:linear-gradient(90deg,#fff,transparent)}
+
 @media(max-width:900px){
  nav .wrap{gap:.6rem}.logo{margin-right:auto}.links{display:none;position:absolute;top:68px;left:0;right:0;flex-direction:column;gap:0;margin:0;background:rgba(255,255,255,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:.6rem 1rem 1rem}
  .links.open{display:flex}.links a{padding:.9rem 1rem;font-size:1.05rem;border-radius:12px}
  .menubtn{display:grid}
  .hero-top{flex-direction:column;align-items:flex-start;gap:1rem}.hero-side{max-width:none}
- .hero{min-height:auto}.stage{justify-items:start}.shot{width:122%;margin-left:-11%}.hero-top{padding-top:1.4rem}
+ .hero{min-height:0;padding-bottom:0}.hero-top{padding-bottom:0}.stage{justify-items:start;margin-top:-.5rem}.shot{width:122%;margin-left:-11%}.hero-top{padding-top:1.4rem}
  .hot.l{display:none}.scrollcue{display:none}.giant{font-size:62vw}
  .spot{grid-template-columns:1fr}.sp{min-height:420px}
- .bento{grid-template-columns:repeat(2,1fr);grid-auto-rows:150px}.bento .tile{grid-column:span 1!important;grid-row:span 1!important}.t1{grid-column:span 2!important}
+ .bento{grid-template-columns:repeat(2,1fr);grid-auto-rows:150px}.bento .tile{grid-column:span 1!important;grid-row:span 1!important}.bento .t1{grid-column:span 2!important}
  .deal .top{grid-template-columns:1fr}.cd div{min-width:64px}
  .why{grid-template-columns:1fr}.why div:first-child{grid-row:auto;min-height:220px}
  .fg{grid-template-columns:1fr}
@@ -298,7 +323,7 @@ footer{background:var(--bg2);border-top:1px solid var(--line);padding:4rem 0 0;o
  .qvm{align-items:end;padding:0}.qvb{border-radius:24px 24px 0 0;max-height:92dvh;overflow:auto}
  .toast{width:max-content;max-width:90vw}
  .drawer{width:100%}
- .mega{font-size:27vw}
+ .mega{font-size:23.5vw}
 }
 @media(max-width:380px){.hero .hh{font-size:2.4rem}.grid{gap:.5rem}}
 @media(max-width:900px){
@@ -444,11 +469,13 @@ footer{background:var(--bg2);border-top:1px solid var(--line);padding:4rem 0 0;o
     <a class="btn btn-p" id="wa" href="#" target="_blank" rel="noopener"><i class="ph-bold ph-whatsapp-logo"></i> Order on WhatsApp</a></div>
 </aside>
 <div class="qvm" id="qvm"><div class="qvb" id="qvb"></div></div>
+<button id="totop" aria-label="Back to top"><svg viewBox="0 0 50 50" aria-hidden="true"><circle cx="25" cy="25" r="24"/></svg><i class="ph-bold ph-arrow-up"></i></button>
 <div class="toast" id="toast"></div>
 
 <script src="data.js"></script>
 <script src="api.js"></script>
 <script>
+document.documentElement.classList.add("js");
 const $=s=>document.querySelector(s);
 let cat="all",dealOnly=false,stock={},cart=LS.get("xm_cart",{});
 const syncStock=()=>{stock=Object.fromEntries(PRODUCTS.map(p=>[p.id,p.stock]))};
@@ -471,8 +498,19 @@ function onScroll(){
   wds.forEach((w,i)=>w.classList.toggle("lit",i/wds.length<p*1.05));
   let cur=0;secs.forEach((s,i)=>{if(s&&s.getBoundingClientRect().top<innerHeight*.4)cur=i});
   links.forEach((a,i)=>a.classList.toggle("on",i===cur));
+  onScroll2();
   tick2=false;
 }
+let lastY=scrollY;const nav=document.querySelector("nav"),tt2=$("#totop");
+function onScroll2(){
+  const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
+  if(!reduce)document.querySelectorAll(".sp").forEach(el=>{const r=el.getBoundingClientRect();if(r.bottom<-100||r.top>innerHeight+100)return;el.style.setProperty("--py",(((r.top+r.height/2)-innerHeight/2)/innerHeight*-44).toFixed(1))});
+  const menuOpen=$("#nl").classList.contains("open");
+  if(y>500&&y>lastY+8&&!menuOpen)nav.classList.add("hide");else if(y<lastY-8||y<=500||menuOpen)nav.classList.remove("hide");
+  lastY=y;
+  tt2.classList.toggle("on",y>900);tt2.style.setProperty("--tp",h>0?(y/h).toFixed(3):0);
+}
+tt2.onclick=()=>scrollTo({top:0,behavior:reduce?"auto":"smooth"});
 addEventListener("scroll",()=>{if(!tick2){tick2=true;requestAnimationFrame(onScroll)}},{passive:true});onScroll();
 /* --- video hero: chapters + UI synced to the video clock --- */
 (()=>{
@@ -561,17 +599,19 @@ function render(){
   const q=$("#q").value.trim().toLowerCase();
   let l=PRODUCTS.filter(p=>(cat==="all"||p.cat===cat)&&(!dealOnly||p.old)&&(`${p.name} ${p.brand} ${p.spec}`.toLowerCase().includes(q)));
   const s=$("#sort").value;if(s==="lo")l.sort((a,b)=>a.price-b.price);if(s==="hi")l.sort((a,b)=>b.price-a.price);
-  $("#grid").innerHTML=l.length?l.map(p=>{const st=stock[p.id];
-    return `<article class="card">${p.badge?`<span class="badge">${p.badge}</span>`:""}<button class="qv" data-q="${p.id}" aria-label="Quick view ${p.name}">${visual(p)}</button>
+  $("#grid").innerHTML=l.length?l.map((p,idx)=>{const st=stock[p.id];
+    return `<article class="card"${animateNext?` data-r="up" style="--i:${idx%4}"`:""}>${p.badge?`<span class="badge">${p.badge}</span>`:""}<button class="qv" data-q="${p.id}" aria-label="Quick view ${p.name}">${visual(p)}</button>
     <div><div class="br">${p.brand}</div><h3>${p.name}</h3><div class="sp2">${p.spec}</div></div>
     <div class="price"><b>${fmt(p.price)}</b>${p.old?`<s>${fmt(p.old)}</s>`:""}</div>
     <div class="row"><span class="stk ${st<=0?"out":st<=5?"low":""}">${st<=0?"Out of stock":st<=5?"Only "+st+" left":"In stock"}</span>
     <button class="add" data-id="${p.id}" ${st<=0?"disabled":""} aria-label="Add ${p.name} to bag"><i class="ph-bold ph-plus"></i></button></div></article>`}).join("")
     :`<div class="empty"><i class="ph-duotone ph-magnifying-glass"></i>Nothing matches that. Try another word or category.</div>`;
+  if(animateNext)reveal($("#grid"));
+  animateNext=true;
 }
 function renderDeals(){
   const l=PRODUCTS.filter(p=>p.old).slice(0,4);
-  $("#dstrip").innerHTML=l.map(p=>`<button class="dc" data-q="${p.id}">${visual(p)}<div><h4>${p.name}</h4><b>${fmt(p.price)}</b><small>Save ${fmt(p.old-p.price)}</small></div></button>`).join("");
+  $("#dstrip").innerHTML=l.map((p,k)=>`<button class="dc" data-r="zoom" style="--i:${k}" data-q="${p.id}">${visual(p)}<div><h4>${p.name}</h4><b>${fmt(p.price)}</b><small>Save ${fmt(p.old-p.price)}</small></div></button>`).join("");
 }
 $("#grid").onclick=e=>{
   const q=e.target.closest(".qv");if(q)return quick(+q.dataset.q);
@@ -611,17 +651,27 @@ $("#nl").onclick=e=>{if(e.target.closest("a"))$("#nl").classList.remove("open")}
 const openD=v=>{$("#drawer").classList.toggle("on",v);$("#ov").classList.toggle("on",v)};
 $("#openCart").onclick=()=>openD(true);$("#closeCart").onclick=$("#ov").onclick=()=>openD(false);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){openD(false);$("#qvm").classList.remove("on")}});
+let animateNext=true;
 let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),1600)}
 function tick(){const n=new Date(),e=new Date(n);e.setDate(n.getDate()+((7-n.getDay())%7||7));e.setHours(0,0,0,0);const s=Math.floor((e-n)/1e3);
   const p=x=>String(x).padStart(2,"0");$("#d").textContent=p(Math.floor(s/86400));$("#h").textContent=p(Math.floor(s%86400/3600));$("#m").textContent=p(Math.floor(s%3600/60));$("#s").textContent=p(s%60)}
 tick();setInterval(tick,1000);
-const io=new IntersectionObserver(es=>es.forEach(x=>x.isIntersecting&&(x.target.classList.add("in"),io.unobserve(x.target))),{threshold:.08});
-document.querySelectorAll(".rv").forEach(x=>io.observe(x));
+/* --- scroll reveals --- */
+const io=("IntersectionObserver" in window)?new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target)}}),{threshold:.12,rootMargin:"0px 0px -6% 0px"}):null;
+function tag(sel,type,step){document.querySelectorAll(sel).forEach((el,i)=>{if(!el.hasAttribute("data-r")&&!el.classList.contains("rv"))el.setAttribute("data-r",type);if(step)el.style.setProperty("--i",i%step)})}
+function reveal(root=document){root.querySelectorAll(".rv,[data-r]").forEach(el=>{if(el.classList.contains("in")||el.__w)return;el.__w=1;io?io.observe(el):el.classList.add("in")})}
+tag("section h2","blur");document.querySelectorAll("section h2").forEach(h=>h.classList.add("under"));
+tag(".bento .tile","zoom",6);tag(".why > div","up",5);tag(".faq details","up",5);tag(".cd div","zoom",4);
+tag(".sp.a","clip");tag(".sp.b","clip");$(".sp.b").style.setProperty("--i",2);
+tag(".mega","up");tag(".fg > div","up",3);tag(".tools","up");tag(".pills","up");tag(".deal .badge","left");
+reveal();
+// safety net: anything already on screen after 2.5s is shown even if the observer missed it
+setTimeout(()=>document.querySelectorAll(".rv:not(.in),[data-r]:not(.in)").forEach(el=>{const r=el.getBoundingClientRect();if(r.top<innerHeight&&r.bottom>0)el.classList.add("in")}),2500);
 $("#grid").innerHTML='<div class="skel"></div>'.repeat(4);
 async function boot(){
-  try{await loadProducts();syncStock();Object.keys(cart).forEach(k=>{if(!stock[k])delete cart[k];else if(cart[k]>stock[k])cart[k]=stock[k]});render();renderDeals();drawCart()}
+  try{await loadProducts();syncStock();Object.keys(cart).forEach(k=>{if(!stock[k])delete cart[k];else if(cart[k]>stock[k])cart[k]=stock[k]});render();renderDeals();reveal($("#dstrip"));drawCart()}
   catch{$("#grid").innerHTML='<div class="empty"><i class="ph-duotone ph-wifi-slash"></i>Could not load products. Please refresh.</div>'}
 }
-boot();setInterval(async()=>{try{await loadProducts();syncStock();render();renderDeals();drawCart()}catch{}},30000);
+boot();setInterval(async()=>{try{await loadProducts();syncStock();animateNext=false;render();renderDeals();reveal($("#dstrip"));drawCart()}catch{}},30000);
 </script>
 </body></html>

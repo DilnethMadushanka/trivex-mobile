@@ -105,7 +105,7 @@ aside{border-left:1px solid var(--line);background:var(--bg2);display:flex;flex-
 
 <main>
   <div class="top">
-    <div class="sc"><i class="ph-bold ph-barcode"></i><input id="q" placeholder="Scan SKU or search product (press Enter to add)" aria-label="Search or scan" autofocus></div>
+    <div class="sc"><i class="ph-bold ph-barcode"></i><input id="q" placeholder="Scan SKU or search" aria-label="Search or scan" autofocus></div>
     <div class="stats"><div>Today<b class="o" id="stT">Rs. 0</b></div><div>Sales<b id="stN">0</b></div></div>
   </div>
   <div class="pills" id="pills"></div>
@@ -150,7 +150,7 @@ const isToday=t=>new Date(t).toDateString()===new Date().toDateString();
 let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),1500)}
 const allCats=[{id:"all",label:"All"},...CATS];
 $("#pills").innerHTML=allCats.map(c=>`<button class="pill ${c.id==="all"?"on":""}" data-c="${c.id}">${c.label}</button>`).join("");
-$("#pills").onclick=e=>{const b=e.target.closest(".pill");if(!b)return;cat=b.dataset.c;document.querySelectorAll(".pill").forEach(p=>p.classList.toggle("on",p===b));grid()};
+$("#pills").onclick=e=>{const b=e.target.closest(".pill");if(!b)return;cat=b.dataset.c;document.querySelectorAll(".pill").forEach(p=>p.classList.toggle("on",p===b));grid();animGrid()};
 function grid(){
   const q=$("#q").value.trim().toLowerCase();
   const l=PRODUCTS.filter(p=>(cat==="all"||p.cat===cat)&&`${p.name} ${p.brand} ${p.sku}`.toLowerCase().includes(q));
@@ -230,8 +230,9 @@ $("#holdBtn").onclick=()=>{
   else toast("Nothing to hold")};
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){$("#mRc").classList.remove("on");$("#mHist").classList.remove("on")}if(e.key==="F2"){e.preventDefault();$("#q").focus()}});
 setInterval(()=>$("#clock").textContent=new Date().toLocaleTimeString("en-GB"),1000);
+function animGrid(){const g=$("#grid");g.classList.remove("fresh");void g.offsetWidth;g.classList.add("fresh");clearTimeout(animGrid.t);animGrid.t=setTimeout(()=>g.classList.remove("fresh"),1500)}
 async function refresh(){try{await loadProducts();syncStock();draw()}catch(e){toast("Can't reach server")}}
 $("#logout").onclick=logout;
-requireLogin(["admin","cashier"],async u=>{me=u;$("#who").textContent=u.name;if(u.role==="admin")$("#adminLink").style.display="";await refresh();stats();setInterval(refresh,20000)});
+requireLogin(["admin","cashier"],async u=>{me=u;$("#who").textContent=u.name;if(u.role==="admin")$("#adminLink").style.display="";await refresh();animGrid();stats();setInterval(refresh,20000)});
 </script>
 </body></html>

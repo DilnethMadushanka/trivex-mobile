@@ -38,3 +38,17 @@ label{display:block;font-size:.8rem;color:var(--mut);margin-bottom:.4rem}
 .login-back{color:var(--mut);font-size:.85rem;text-align:center}.login-back:hover{color:var(--acc)}
 
 @media(max-width:600px){input,select{font-size:16px}.btn{min-height:44px}}
+
+/* ---------- entrance animations for the staff pages ---------- */
+@keyframes inUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes inDown{from{opacity:0;transform:translateY(-100%)}to{opacity:1;transform:none}}
+@keyframes inFade{from{opacity:0}to{opacity:1}}
+body>header,.app>header{animation:inDown .55s cubic-bezier(.2,.8,.2,1) both}
+.k,.bx,.tabs{animation:inUp .6s cubic-bezier(.2,.8,.2,1) both}
+.kp .k:nth-child(2){animation-delay:.07s}.kp .k:nth-child(3){animation-delay:.14s}.two .bx:nth-child(2){animation-delay:.1s}
+tbody tr{animation:inFade .35s both}
+tbody tr:nth-child(2){animation-delay:28ms}tbody tr:nth-child(3){animation-delay:56ms}tbody tr:nth-child(4){animation-delay:84ms}tbody tr:nth-child(5){animation-delay:112ms}tbody tr:nth-child(6){animation-delay:140ms}tbody tr:nth-child(7){animation-delay:168ms}tbody tr:nth-child(8){animation-delay:196ms}tbody tr:nth-child(9){animation-delay:224ms}tbody tr:nth-child(10){animation-delay:252ms}tbody tr:nth-child(11){animation-delay:280ms}tbody tr:nth-child(12){animation-delay:308ms}tbody tr:nth-child(13){animation-delay:336ms}tbody tr:nth-child(14){animation-delay:364ms}
+#grid.fresh .p{animation:inUp .45s cubic-bezier(.2,.8,.2,1) both}
+#grid.fresh .p:nth-child(2){animation-delay:30ms}#grid.fresh .p:nth-child(3){animation-delay:60ms}#grid.fresh .p:nth-child(4){animation-delay:90ms}#grid.fresh .p:nth-child(5){animation-delay:120ms}#grid.fresh .p:nth-child(6){animation-delay:150ms}#grid.fresh .p:nth-child(7){animation-delay:180ms}#grid.fresh .p:nth-child(8){animation-delay:210ms}#grid.fresh .p:nth-child(9){animation-delay:240ms}#grid.fresh .p:nth-child(10){animation-delay:270ms}#grid.fresh .p:nth-child(11){animation-delay:300ms}#grid.fresh .p:nth-child(12){animation-delay:330ms}#grid.fresh .p:nth-child(13){animation-delay:360ms}#grid.fresh .p:nth-child(14){animation-delay:390ms}#grid.fresh .p:nth-child(15){animation-delay:420ms}#grid.fresh .p:nth-child(16){animation-delay:420ms}#grid.fresh .p:nth-child(17){animation-delay:420ms}#grid.fresh .p:nth-child(18){animation-delay:420ms}#grid.fresh .p:nth-child(19){animation-delay:420ms}#grid.fresh .p:nth-child(20){animation-delay:420ms}#grid.fresh .p:nth-child(21){animation-delay:420ms}#grid.fresh .p:nth-child(22){animation-delay:420ms}#grid.fresh .p:nth-child(23){animation-delay:420ms}#grid.fresh .p:nth-child(24){animation-delay:420ms}
+.lines .ln:last-child{animation:inUp .3s cubic-bezier(.2,.8,.2,1)}
+@media(prefers-reduced-motion:reduce){body>header,.app>header,.k,.bx,.tabs,tbody tr,#grid.fresh .p,.lines .ln{animation:none!important}}
